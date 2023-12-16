@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>vscode</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div id="main">
+      <div id="overlay">
+        <form id="card" action="/changename/filename" method="post">
+          <input id="rename" name="newname" type="text">
+          <input id="btn" type="submit">
+        </form>
+      </div>
+
+      <div id="side">
+        <i id="one" class="ri-file-copy-line"></i>
+        <i class="ri-search-line"></i>
+        <i class="ri-git-merge-fill"></i>
+        <i class="ri-play-line"></i>
+        <i class="ri-code-block"></i>
+      </div>
+
+      <div id="left">
+
+        <div id="folder">
+          <h3><%= folder %></h3>
+          <div id="icon">
+            <i id="fileicon" class="ri-file-line"></i>
+            <i id="foldericon" class="ri-folder-3-line"></i>
+            <a style="text-decoration: none; color: black;" href="/"><i class="ri-restart-line"></i></a>
+          </div>
+        </div>
+
+        <form id="fileform" style="display: none;" action="/formcreate">
+          <input type="text" placeholder="filename" name="filecreateinput">
+        </form>
+
+        <form id="folderform" style="display: none;" action="/foldercreate">
+          <input type="text" placeholder="foldername" name="foldercreateinput">
+        </form>
+
+        <div id="files">
+          <% files.forEach(function(file){ %>
+            <div id="file">
+
+              <div class="filename">
+                <% if( file.isDirectory() ){ %>
+                  <i class="ri-folder-3-line"></i>
+                <% }  else{  %>
+                  <i class="ri-file-line"></i>
+                <% } %>
+                
+                <!-- <h4><%= file.name %></h4> -->
+                <a style="text-decoration: none;" href="/file/<%=file.name%>"><%= file.name %></a>
+              </div>
+
+              <div class="icons">
+                <i id="editbtn" data-filename="<%=file.name%>" class="ri-pencil-line"></i>
+                <% if( file.isDirectory() ){ %>
+                  <a href="/delete/folder/<%= file.name %>"><i class="ri-delete-bin-line"></i></a>
+                <% }  else{  %>
+                  <a href="/delete/file/<%= file.name %>"><i class="ri-delete-bin-line"></i></a>
+                <% } %>
+                
+              </div>
+            
+            </div>
+          <%}) %>
+
+        </div>
+      </div>
+      <div id="right">
+        
+      </div>
+
+    </div>
+
+  </body>
+
+
+
+  <script>
+
+    function donoOff(){
+      // document.querySelector("form").forEach(function(form){
+      //   form.style.display = "none";
+      // });
+      document.querySelector("#fileform").style.display = "none" ;
+      document.querySelector("#folderform").style.display = "none" ;
+    }
+    
+    document.querySelector("#fileicon").addEventListener("click",function(dets){
+      donoOff();
+      document.querySelector("#fileform").style.display = "initial";
+    })
+
+    document.querySelector("#foldericon").addEventListener("click",function(dets){
+      donoOff();
+      document.querySelector("#folderform").style.display = "initial";
+    })
+
+    window.addEventListener("keydown",function(dets){
+      if(dets.keyCode == 27){
+        donoOff();
+      }
+    })
+  
+
+  document.querySelector(".icons").addEventListener("click",function(dets){
+    if(dets.target.id === "editbtn"){
+      document.querySelector("#overlay").style.display='flex';
+      document.querySelector("#overlay #rename").value = dets.target.dataset.filename;
+      document.querySelector("#overlay #card").setAttribute('action',`/changename/${dets.target.dataset.filename}`);
+      document.querySelector("#overlay #rename").select();
+    }
+  })
+
+      
+
+    
+  </script>
+</html>
